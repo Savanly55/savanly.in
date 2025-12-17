@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>savan.ly.</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:'Segoe UI',sans-serif;
+}
+
+body{
+  background:radial-gradient(circle at top,#200000,#000);
+  color:#fff;
+}
+
+/* BLUR */
+.blur.active{
+  filter:blur(6px) brightness(0.7);
+  pointer-events:none;
+}
+
+/* NAV */
+header{
+  padding:20px 40px;
+  display:flex;
+  justify-content:space-between;
+}
+
+nav a{
+  margin-left:20px;
+  color:white;
+  cursor:pointer;
+  text-decoration:none;
+  position:relative;
+}
+
+nav a::after{
+  content:"";
+  position:absolute;
+  left:0;
+  bottom:-5px;
+  width:0;
+  height:2px;
+  background:red;
+  transition:.3s;
+}
+
+nav a:hover::after{width:100%}
+
+/* HERO */
+.hero{
+  min-height:90vh;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:60px 80px;
+  gap:80px;                 /* 🔑 PREVENT OVERLAP */
+}
+
+/* IMAGE */
+.hero img{
+  width:420px;              /* balanced size */
+  flex-shrink:0;            /* 🔑 NEVER overlap text */
+  border-radius:50%;
+  box-shadow:
+    0 0 40px red,
+    0 0 90px rgba(255,0,0,.6);
+  animation:float 6s ease-in-out infinite;
+}
+
+@keyframes float{
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(-20px)}
+}
+
+/* TEXT */
+.hero-text{
+  max-width:620px;
+}
+
+.hero-text h1{
+  font-size:3.6rem;         /* 🔥 BIGGER */
+}
+
+.hero-text h3{
+  font-size:2rem;
+  margin:12px 0;
+}
+
+.hero-text p{
+  font-size:1.1rem;         /* 🔥 BIGGER */
+  line-height:1.7;
+  opacity:.9;
+}
+
+/* ICONS */
+.socials{
+  margin-top:15px;
+}
+
+.socials a{
+  margin-right:18px;
+  font-size:24px;
+  color:white;
+  transition:.3s;
+}
+
+.socials a:hover{color:red}
+
+/* BUTTON */
+.btn{
+  margin-top:25px;
+  padding:12px 34px;
+  font-size:1rem;
+  background:transparent;
+  border:2px solid red;
+  color:white;
+  cursor:pointer;
+}
+
+/* POPUP */
+.folder{
+  position:fixed;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%) scale(.85);
+  opacity:0;
+  background:#0b0b0b;
+  border:2px solid red;
+  width:380px;
+  z-index:1000;
+  pointer-events:none;
+  transition:.4s ease;
+}
+
+.folder.active{
+  opacity:1;
+  transform:translate(-50%,-50%) scale(1);
+  pointer-events:auto;
+  box-shadow:0 0 40px rgba(255,0,0,.6);
+}
+
+.folder-header{
+  background:linear-gradient(90deg,#ff0000,#7a0000);
+  color:black;
+  padding:10px;
+  display:flex;
+  justify-content:space-between;
+}
+
+.folder-body{
+  padding:18px;
+}
+
+.close{cursor:pointer}
+</style>
+</head>
+
+<body>
+
+<div class="blur" id="blur">
+
+<header>
+  <div>savan.ly.</div>
+  <nav>
+    <a>Home</a>
+    <a id="aboutBtn">About</a>
+    <a id="contactBtn">Contact</a>
+  </nav>
+</header>
+
+<section class="hero">
+  <!-- TEXT FIRST (IMPORTANT) -->
+  <div class="hero-text">
+    <h1>Hi, I’m savan.ly.</h1>
+    <h3>I am a <span id="typing"></span></h3>
+    <p>Web & Bot Developer crafting modern, dark, cinematic digital experiences.</p>
+
+    <div class="socials">
+      <a href="https://github.com/" target="_blank"><i class="fa-brands fa-github"></i></a>
+     <a href="https://discord.com/users/939776274820374548" target="_blank">
+  <i class="fa-brands fa-discord"></i>
+</a>
+      <a href="https://x.com/" target="_blank"><i class="fa-brands fa-x-twitter"></i></a>
+    </div>
+
+    <button class="btn" id="hireBtn">Hire Me</button>
+  </div>
+
+  <!-- IMAGE LAST -->
+  <img src="main.jpg" alt="profile">
+</section>
+
+</div>
+
+<!-- ABOUT -->
+<div class="folder" id="aboutFolder">
+  <div class="folder-header">
+    <span>about_me.txt</span>
+    <span class="close" id="closeAbout">✖</span>
+  </div>
+  <div class="folder-body">
+    Name: savan.ly.<br><br>
+    Role: Web & Bot Developer<br><br>
+    Style: Anime • Dark UI • Cinematic
+  </div>
+</div>
+
+<!-- CONTACT -->
+<div class="folder" id="contactFolder">
+  <div class="folder-header">
+    <span>contact.txt</span>
+    <span class="close" id="closeContact">✖</span>
+  </div>
+  <div class="folder-body">
+    📧 mrfrostbites@gmail.com<br><br>
+    💬 Discord: savan.ly.
+  </div>
+</div>
+
+<script>
+/* TYPING */
+const words=["Web Developer","Bot Developer","Dark UI Creator"];
+let i=0,j=0,del=false;
+const typing=document.getElementById("typing");
+
+function type(){
+  typing.textContent=words[i].slice(0,j);
+  if(!del){j++; if(j>words[i].length) del=true;}
+  else{j--; if(j===0){del=false;i=(i+1)%words.length;}}
+  setTimeout(type,del?80:120);
+}
+type();
+
+/* POPUPS */
+const blur=document.getElementById("blur");
+
+function openFolder(folder){
+  folder.classList.add("active");
+  blur.classList.add("active");
+}
+function closeFolder(folder){
+  folder.classList.remove("active");
+  blur.classList.remove("active");
+}
+
+aboutBtn.onclick=()=>openFolder(aboutFolder);
+contactBtn.onclick=()=>openFolder(contactFolder);
+hireBtn.onclick=()=>openFolder(contactFolder);
+
+closeAbout.onclick=()=>closeFolder(aboutFolder);
+closeContact.onclick=()=>closeFolder(contactFolder);
+</script>
+
+</body>
+</html>
